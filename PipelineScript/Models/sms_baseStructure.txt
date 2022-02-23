@@ -1,0 +1,19 @@
+StoryMedicine
+    SMS_S##
+        EDITORIAL
+            E###
+            SOURCES
+                AUDIO
+                    MUSIC
+                    SFX
+                    SOURCE
+                    VO
+                GRAPHICS
+                SLATES
+                VIDEO
+                    PROXIES
+                    RAW INGESTED
+                    STOCK
+        VFX_EDITORIAL
+            ASSETS
+            E###

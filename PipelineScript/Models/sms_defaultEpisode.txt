@@ -1,0 +1,15 @@
+EXPORTS
+    00_PRODMASTER
+    01_DAILIES
+    02_OLD
+MEDIA
+    00_VIDEO
+    01_AUDIO
+    02_GRAPHICS
+PROJECTS
+    AfterEffects
+    Illustrator
+    Photoshop
+    PremierePro
+    ProTools
+    Resolve

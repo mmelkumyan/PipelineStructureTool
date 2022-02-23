@@ -1,0 +1,14 @@
+{
+  "root": {
+    "season_1": {
+        "episode_1": {
+            "EXPORTS": {
+                "00_PRODMASTER": null,
+                "01_DAILIES":  null,
+                "02_OLD": null
+            },
+            "DAILIES": null
+        }
+    }
+  }
+}
