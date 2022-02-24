@@ -4,7 +4,7 @@ import os
 # TODO:
 # windows folders -> store as JSON template ->
 
-# TO CREATE UI FILE: `pyuic5 -x .\pipelineToolQT.ui -o ui_mainWindow_BACKUP.py`
+# TO CREATE UI FILE: `pyuic5 -x .\pipelineToolQT.src_ui -o ui_mainWindow_BACKUP.py`
 
 # Tutorial on how to dynamically create widgets: https://www.youtube.com/watch?v=4BZL3cF_Dww
 
