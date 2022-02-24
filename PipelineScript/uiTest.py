@@ -4,6 +4,7 @@ from PyQt5 import QtWidgets, QtCore
 
 from PipelineScript.ui.ui_mainWindow import Ui_MainWindow
 from folderStructureGenerator import generate_dirs
+import projects
 
 # Regenerate source ui class: ` pyuic5 -x .\PipelineScript\ui\pipelineToolQT.ui -o .\PipelineScript\ui\ui_mainWindow.py`
 
@@ -18,15 +19,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
 
     # PROJECT SAVE/LOAD
-    def signalLoadProject(self):
+    def sLoadProject(self):
         print("Load project")
         return
 
-    def signalSaveProject(self):
+    def sSaveProject(self):
         print("Save project")
+        project_name = self.ui.projectNameText.text()
+        projects.saveProject(project_name, self.row_to_model_name_map, self.ui)
         return
 
-    def signalNewRow(self):
+    def sNewRow(self):
         print("new row!")
         self.createNewRow(self.row_cnt)
         self.row_cnt += 1
@@ -97,7 +100,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.horizontalLayout.setStretch(2, 5)
         # self.horizontalLayout.setStretch(4, 5)
 
-        self.ui.modelsVerticleLayout.insertLayout(self.ui.modelsVerticleLayout.count()-2, new_horizontal_layout)
+        self.ui.modelsVerticleLayout.insertLayout(self.ui.modelsVerticleLayout.count() - 2, new_horizontal_layout)
         setattr(self.ui, horizontal_layout_name, new_horizontal_layout)
 
         # RE-TRANSLATE UI
@@ -127,7 +130,7 @@ class MainWindow(QtWidgets.QMainWindow):
         model_name = self.row_to_model_name_map[row_name]
         file_name = self.browseFile("./Models", model_name + " Model")
         if file_name:
-            getattr(self.ui, row_name+"LocationText").setText(file_name)
+            getattr(self.ui, row_name + "LocationText").setText(file_name)
         return
 
     def sRootBrowse(self, row_name):
@@ -154,7 +157,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def browseFile(self, root, file_type):
         options = QtWidgets.QFileDialog.Options()
         file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, f"Browse {file_type}", root, "Model files (*.txt)",
-                                                   options=options)
+                                                             options=options)
         return file_name
 
     def browseDirectory(self, root, dir_type):

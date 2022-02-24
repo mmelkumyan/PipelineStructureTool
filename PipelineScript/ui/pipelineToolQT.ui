@@ -210,7 +210,7 @@
    <sender>projectLoadButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>signalLoadProject()</slot>
+   <slot>sLoadProject()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>443</x>
@@ -226,7 +226,7 @@
    <sender>projectSaveButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>signalSaveProject()</slot>
+   <slot>sSaveProject()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>343</x>
@@ -242,7 +242,7 @@
    <sender>newRowButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>signalNewRow()</slot>
+   <slot>sNewRow()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>443</x>
@@ -256,16 +256,8 @@
   </connection>
  </connections>
  <slots>
-  <slot>signalEpisodeBrowse()</slot>
-  <slot>signalEpisodeGenerate()</slot>
-  <slot>signalMainBrowse()</slot>
-  <slot>signalMainGenerate()</slot>
-  <slot>signalSeasonBrowse()</slot>
-  <slot>signalSeasonGenerate()</slot>
-  <slot>signalSaveProject()</slot>
-  <slot>signalLoadProject()</slot>
-  <slot>signalMainRootBrowse()</slot>
-  <slot>signalNewRow()</slot>
-  <slot>signalTestTextChange()</slot>
+  <slot>sSaveProject()</slot>
+  <slot>sLoadProject()</slot>
+  <slot>sNewRow()</slot>
  </slots>
 </ui>

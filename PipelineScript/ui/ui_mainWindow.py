@@ -84,9 +84,9 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuCreate_Model.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.projectLoadButton.clicked.connect(MainWindow.signalLoadProject) # type: ignore
-        self.projectSaveButton.clicked.connect(MainWindow.signalSaveProject) # type: ignore
-        self.newRowButton.clicked.connect(MainWindow.signalNewRow) # type: ignore
+        self.projectLoadButton.clicked.connect(MainWindow.sLoadProject) # type: ignore
+        self.projectSaveButton.clicked.connect(MainWindow.sSaveProject) # type: ignore
+        self.newRowButton.clicked.connect(MainWindow.sNewRow) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
