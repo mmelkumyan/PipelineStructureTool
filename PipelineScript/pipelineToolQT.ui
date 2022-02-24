@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>611</width>
-    <height>430</height>
+    <width>783</width>
+    <height>306</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,29 +19,28 @@
      <rect>
       <x>10</x>
       <y>50</y>
-      <width>484</width>
-      <height>102</height>
+      <width>661</width>
+      <height>131</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="3">
-      <widget class="QPushButton" name="episodeBrowseButton">
+     <item row="1" column="3">
+      <widget class="QPushButton" name="mainLocationBrowseButton">
        <property name="text">
         <string>Browse</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="mainLable">
-       <property name="text">
-        <string>Main Structure</string>
+     <item row="1" column="4">
+      <widget class="QLineEdit" name="mainRoot">
+       <property name="statusTip">
+        <string extracomment="test tip"/>
        </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="seasonLable">
        <property name="text">
-        <string>Season</string>
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>/root</string>
        </property>
       </widget>
      </item>
@@ -58,6 +57,20 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="3">
+      <widget class="QPushButton" name="episodeBrowseButton">
+       <property name="text">
+        <string>Browse</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="mainLable">
+       <property name="text">
+        <string>Main Structure</string>
+       </property>
+      </widget>
+     </item>
      <item row="2" column="1">
       <widget class="QLabel" name="episodeNumberLabel">
        <property name="text">
@@ -65,51 +78,38 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="episodeLable">
+     <item row="3" column="0">
+      <widget class="QLabel" name="seasonLable">
        <property name="text">
-        <string>Episode</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="4">
-      <widget class="QPushButton" name="episodeGenerateButton">
-       <property name="text">
-        <string>Generate</string>
+        <string>Season</string>
        </property>
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QLabel" name="tableLable">
+      <widget class="QLabel" name="dirModelLocationLabel">
        <property name="text">
         <string>Directory model location</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
-      <widget class="QPushButton" name="mainBrowseButton">
-       <property name="text">
-        <string>Browse</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
+     <item row="1" column="6">
       <widget class="QPushButton" name="mainGenerateButton">
        <property name="text">
         <string>Generate</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="mainLocation">
-       <property name="statusTip">
-        <string extracomment="test tip"/>
-       </property>
+     <item row="2" column="6">
+      <widget class="QPushButton" name="episodeGenerateButton">
        <property name="text">
-        <string/>
+        <string>Generate</string>
        </property>
-       <property name="placeholderText">
-        <string>/model/location.txt</string>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="episodeLable">
+       <property name="text">
+        <string>Episode</string>
        </property>
       </widget>
      </item>
@@ -140,6 +140,19 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="mainLocation">
+       <property name="statusTip">
+        <string extracomment="test tip"/>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>/model/location.txt</string>
+       </property>
+      </widget>
+     </item>
      <item row="3" column="3">
       <widget class="QPushButton" name="seasonBrowseButton">
        <property name="text">
@@ -147,10 +160,24 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="4">
+     <item row="3" column="6">
       <widget class="QPushButton" name="seasonGenerateButton">
        <property name="text">
         <string>Generate</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="5">
+      <widget class="QPushButton" name="mainRootBrowseButton">
+       <property name="text">
+        <string>Browse</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QLabel" name="rootLocationLabel">
+       <property name="text">
+        <string>Root location</string>
        </property>
       </widget>
      </item>
@@ -161,7 +188,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>401</width>
+      <width>481</width>
       <height>31</height>
      </rect>
     </property>
@@ -173,17 +200,24 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QPushButton" name="setProjectNameButton">
-       <property name="text">
-        <string>Set</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="projectNameLabel">
        <property name="text">
         <string>Project Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QPushButton" name="projectLoadButton">
+       <property name="text">
+        <string>Load</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QPushButton" name="projectSaveButton">
+       <property name="text">
+        <string>Save</string>
        </property>
       </widget>
      </item>
@@ -195,7 +229,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>611</width>
+     <width>783</width>
      <height>21</height>
     </rect>
    </property>
@@ -266,7 +300,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>mainBrowseButton</sender>
+   <sender>mainLocationBrowseButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>signalMainBrowse()</slot>
@@ -313,6 +347,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>projectLoadButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>signalLoadProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>443</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>255</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>projectSaveButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>signalSaveProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>343</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>255</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mainRootBrowseButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>signalMainRootBrowse()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>523</x>
+     <y>116</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>391</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>signalEpisodeBrowse()</slot>
@@ -321,5 +403,8 @@
   <slot>signalMainGenerate()</slot>
   <slot>signalSeasonBrowse()</slot>
   <slot>signalSeasonGenerate()</slot>
+  <slot>signalSaveProject()</slot>
+  <slot>signalLoadProject()</slot>
+  <slot>signalMainRootBrowse()</slot>
  </slots>
 </ui>

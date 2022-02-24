@@ -7,7 +7,7 @@ from ui_mainWindow import Ui_MainWindow
 from folderStructureGenerator import generate_dirs
 
 
-# Regenerate ui class: `pyuic5 -x .\pipelineToolQT.ui -o ui_mainWindow_BACKUP.py`
+# Regenerate ui class: `pyuic5 -x .\PipelineScript\pipelineToolQT.ui -o .\PipelineScript\ui_mainWindow.py`
 
 class MainWindow(QMainWindow):
     episode_cnt = 0
@@ -18,22 +18,38 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+    # PROJECT SAVE/LOAD
+    def signalLoadProject(self):
+        print("Load project")
+        return
+
+    def signalSaveProject(self):
+        print("Save project")
+        return
+
     # MAIN MODEL
     def signalMainBrowse(self):
-        file_name = self.browseModelFile("Main", "./Models")
+        file_name = self.browseModelFile("Main Model", "./Models", False)
         if file_name:
             self.ui.mainLocation.setText(file_name)
         return
 
+    def signalMainRootBrowse(self):
+        file_name = self.browseModelFile("root location", "./", True)
+        if file_name:
+            self.ui.mainRoot.setText(file_name)
+        return
+
+
     def signalMainGenerate(self):
-        episode_root = "root/"
+        episode_root = self.ui.mainRoot.text()
         model_file = self.ui.mainLocation.text()
         generate_dirs(episode_root, model_file)
         return
 
     # EPISODE MODEL
     def signalEpisodeBrowse(self):
-        file_name = self.browseModelFile("Episode", "./Models")
+        file_name = self.browseModelFile("Episode Model", "./Models", False)
         if file_name:
             self.ui.episodeLocation.setText(file_name)
 
@@ -54,10 +70,13 @@ class MainWindow(QMainWindow):
     def signalSeasonGenerate(self):
         return
 
-    def browseModelFile(self, model_name, root):
+    def browseModelFile(self, file_type, root, is_dir):
         options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getOpenFileName(self, f"Browse {model_name} Model", root, "Model files (*.txt)",
-                                                   options=options)
+        if is_dir:
+            file_name = QFileDialog.getExistingDirectory(self, "test caption", root, options=options)
+        else:
+            file_name, _ = QFileDialog.getOpenFileName(self, f"Browse {file_type}", root, "Model files (*.txt)",
+                                                       options=options)
         if file_name:
             return file_name
         else:
