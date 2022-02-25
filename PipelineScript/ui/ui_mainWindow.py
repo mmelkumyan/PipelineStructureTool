@@ -23,9 +23,9 @@ class Ui_MainWindow(object):
         self.verticalLayoutWidget = QtWidgets.QWidget(self.modelsGroupBox)
         self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 20, 729, 261))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.modelsVerticleLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
-        self.modelsVerticleLayout.setContentsMargins(0, 0, 0, 0)
-        self.modelsVerticleLayout.setObjectName("modelsVerticleLayout")
+        self.modelsWindowVerticleLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
+        self.modelsWindowVerticleLayout.setContentsMargins(0, 0, 0, 0)
+        self.modelsWindowVerticleLayout.setObjectName("modelsWindowVerticleLayout")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         spacerItem = QtWidgets.QSpacerItem(120, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
@@ -40,12 +40,15 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.rootLocationLabel)
         spacerItem2 = QtWidgets.QSpacerItem(80, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem2)
-        self.modelsVerticleLayout.addLayout(self.horizontalLayout_2)
+        self.modelsWindowVerticleLayout.addLayout(self.horizontalLayout_2)
+        self.modelsVerticleLayout = QtWidgets.QVBoxLayout()
+        self.modelsVerticleLayout.setObjectName("modelsVerticleLayout")
+        self.modelsWindowVerticleLayout.addLayout(self.modelsVerticleLayout)
         spacerItem3 = QtWidgets.QSpacerItem(724, 91, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.modelsVerticleLayout.addItem(spacerItem3)
+        self.modelsWindowVerticleLayout.addItem(spacerItem3)
         self.newRowButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.newRowButton.setObjectName("newRowButton")
-        self.modelsVerticleLayout.addWidget(self.newRowButton)
+        self.modelsWindowVerticleLayout.addWidget(self.newRowButton)
         self.projectGroupBox = QtWidgets.QGroupBox(self.centralwidget)
         self.projectGroupBox.setGeometry(QtCore.QRect(10, 10, 501, 61))
         self.projectGroupBox.setObjectName("projectGroupBox")
@@ -67,6 +70,9 @@ class Ui_MainWindow(object):
         self.projectNameLabel = QtWidgets.QLabel(self.gridLayoutWidget_2)
         self.projectNameLabel.setObjectName("projectNameLabel")
         self.projectsGridLayout.addWidget(self.projectNameLabel, 1, 0, 1, 1)
+        self.clearModels = QtWidgets.QPushButton(self.centralwidget)
+        self.clearModels.setGeometry(QtCore.QRect(580, 30, 75, 24))
+        self.clearModels.setObjectName("clearModels")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 778, 21))
@@ -87,6 +93,7 @@ class Ui_MainWindow(object):
         self.projectLoadButton.clicked.connect(MainWindow.sLoadProject) # type: ignore
         self.projectSaveButton.clicked.connect(MainWindow.sSaveProject) # type: ignore
         self.newRowButton.clicked.connect(MainWindow.sNewRow) # type: ignore
+        self.clearModels.clicked.connect(MainWindow.sClearAllModels) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -101,6 +108,7 @@ class Ui_MainWindow(object):
         self.projectSaveButton.setText(_translate("MainWindow", "Save"))
         self.projectNameText.setText(_translate("MainWindow", "Story Medicine"))
         self.projectNameLabel.setText(_translate("MainWindow", "Project Name"))
+        self.clearModels.setText(_translate("MainWindow", "Clear rows"))
         self.menuFile.setTitle(_translate("MainWindow", "Generate"))
         self.menuCreate_Model.setTitle(_translate("MainWindow", "Create Model"))
 

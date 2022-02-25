@@ -1,4 +1,6 @@
 import sys
+import os
+import json
 
 from PyQt5 import QtWidgets, QtCore
 
@@ -21,24 +23,56 @@ class MainWindow(QtWidgets.QMainWindow):
     # PROJECT SAVE/LOAD
     def sLoadProject(self):
         print("Load project")
-        return
+        self.clearModelRows()
+        # self.browseFile(".\Projects", )
+        project_path = self.browseFile("./Projects", "Browse Projects", "Project", "json")
+        print(project_path)
+
+        with open(project_path) as project_file:
+            project = json.load(project_file)
+            models = project["models"]
+            for r, (model_name, fields) in enumerate(models.items()):
+                row_name = self.createNewModelRow(r)
+                getattr(self.ui, row_name + "ModelLabel").setText(model_name)
+                self.row_to_model_name_map[row_name] = model_name
+
+                getattr(self.ui, row_name + "LocationText").setText(fields["modelFile"])
+                getattr(self.ui, row_name + "RootText").setText(fields["rootDir"])
+                self.row_cnt += 1
 
     def sSaveProject(self):
         print("Save project")
         project_name = self.ui.projectNameText.text()
-        projects.saveProject(project_name, self.row_to_model_name_map, self.ui)
-        return
+        self.saveProject(project_name)
+
+    def saveProject(self, name):
+        project = {
+            "name": name,
+            "models": {},
+            "structure": {}
+        }
+
+        for row_name, model_name in self.row_to_model_name_map.items():
+            project["models"][model_name] = {}
+            project["models"][model_name]["numLabel"] = getattr(self.ui, row_name + "NumberLabel").text()
+            project["models"][model_name]["modelFile"] = getattr(self.ui, row_name + "LocationText").text()
+            project["models"][model_name]["rootDir"] = getattr(self.ui, row_name + "RootText").text()
+
+        json_object = json.dumps(project, indent=4)
+        root = os.path.join(os.getcwd(), "Projects")
+        suffix = "_PipelineProject"
+        file_name = name.replace(" ", "") + suffix + ".json"
+        file_path = os.path.join(root, file_name)
+
+        with open(file_path, "w") as out:
+            out.write(json_object)
 
     def sNewRow(self):
         print("new row!")
-        self.createNewRow(self.row_cnt)
+        self.createNewModelRow(self.row_cnt)
         self.row_cnt += 1
 
-        # print(self.src_ui.row0_HorizontalLayout.text() + " wow!")
-        # x=self.src_ui.row0HorizontalLayout.itemAt(0).widget()
-        # print(x.text() + " wow!")
-
-    def createNewRow(self, row):
+    def createNewModelRow(self, row):
         # CREATE WIDGETS
         row_name = f"row{row}"
 
@@ -100,7 +134,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.horizontalLayout.setStretch(2, 5)
         # self.horizontalLayout.setStretch(4, 5)
 
-        self.ui.modelsVerticleLayout.insertLayout(self.ui.modelsVerticleLayout.count() - 2, new_horizontal_layout)
+        self.ui.modelsVerticleLayout.insertLayout(self.ui.modelsVerticleLayout.count(), new_horizontal_layout)
         setattr(self.ui, horizontal_layout_name, new_horizontal_layout)
 
         # RE-TRANSLATE UI
@@ -124,14 +158,15 @@ class MainWindow(QtWidgets.QMainWindow):
         # SAVE INFO TO MAP
         self.row_to_model_name_map[row_name] = ""
 
+        return row_name
+
     # SIGNALS
     def sModelBrowse(self, row_name):
         print(f"Browse model {row_name}")
         model_name = self.row_to_model_name_map[row_name]
-        file_name = self.browseFile("./Models", model_name + " Model")
+        file_name = self.browseFile("./Models", f"Browse {model_name} Models", "Model", "txt")
         if file_name:
             getattr(self.ui, row_name + "LocationText").setText(file_name)
-        return
 
     def sRootBrowse(self, row_name):
         print(f"Browse root {row_name}")
@@ -139,7 +174,6 @@ class MainWindow(QtWidgets.QMainWindow):
         dir_name = self.browseDirectory("./", model_name + " Root")
         if dir_name:
             getattr(self.ui, row_name + "RootText").setText(dir_name)
-        return
 
     def sGenerate(self, row_name):
         print(f"Generate {row_name}")
@@ -147,16 +181,24 @@ class MainWindow(QtWidgets.QMainWindow):
         episode_root = getattr(self.ui, row_name + "RootText").text()
         generate_dirs(episode_root, model_file)
         # TODO: increment cnt
-        return
 
     def sModelTextChange(self, row_name, text):
         print(f"{row_name}, new text: {text}")
         self.row_to_model_name_map[row_name] = text
-        return
 
-    def browseFile(self, root, file_type):
+    def sClearAllModels(self):
+        print("Clearing all model rows")
+        self.clearModelRows()
+
+    # HELPER FUNCTIONS
+    def clearModelRows(self):
+        self.deleteItemsOfLayout(self.ui.modelsVerticleLayout)
+        self.row_cnt = 0
+        self.row_to_model_name_map = {}
+
+    def browseFile(self, root, window_title, file_name, file_ext):
         options = QtWidgets.QFileDialog.Options()
-        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, f"Browse {file_type}", root, "Model files (*.txt)",
+        file_name, _ = QtWidgets.QFileDialog.getOpenFileName(self, window_title, root, f"{file_name} files (*.{file_ext})",
                                                              options=options)
         return file_name
 
@@ -165,9 +207,18 @@ class MainWindow(QtWidgets.QMainWindow):
         file_name = QtWidgets.QFileDialog.getExistingDirectory(self, f"Browse {dir_type}", root, options=options)
         return file_name
 
-    # TODO:
-    # Add signal/slot for setting project
-    # Write project info to project json
+    # Initially sourced from: https://stackoverflow.com/questions/37564728/pyqt-how-to-remove-a-layout-from-a-layout
+    def deleteItemsOfLayout(self, layout):
+        while layout.count() > 0:
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.setParent(None)
+                delattr(self.ui, widget.objectName())
+                del widget
+            else:  # If it's not a widget, it is a layout
+                self.deleteItemsOfLayout(item.layout())
+                delattr(self.ui, item.layout().objectName())
 
 
 if __name__ == "__main__":

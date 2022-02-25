@@ -8,7 +8,7 @@ import json
 #     def __init__(self):
 #         return
 
-def saveProject(name, row_model_map, ui):
+def saveProject(ui, name, row_model_map):
     project = {
         "name": name,
         "models": {},
@@ -29,3 +29,4 @@ def saveProject(name, row_model_map, ui):
 
     with open(file_path, "w") as out:
         out.write(json_object)
+

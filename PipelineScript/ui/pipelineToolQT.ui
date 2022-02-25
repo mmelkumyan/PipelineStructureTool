@@ -35,7 +35,7 @@
        <height>261</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="modelsVerticleLayout">
+     <layout class="QVBoxLayout" name="modelsWindowVerticleLayout">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
@@ -101,6 +101,9 @@
          </spacer>
         </item>
        </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="modelsVerticleLayout"/>
       </item>
       <item>
        <spacer name="verticalSpacer">
@@ -178,6 +181,19 @@
      </layout>
     </widget>
    </widget>
+   <widget class="QPushButton" name="clearModels">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>30</y>
+      <width>75</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Clear rows</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -254,10 +270,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>clearModels</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>sClearAllModels()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>617</x>
+     <y>62</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>388</x>
+     <y>207</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>sSaveProject()</slot>
   <slot>sLoadProject()</slot>
   <slot>sNewRow()</slot>
+  <slot>sClearAllModels()</slot>
  </slots>
 </ui>
