@@ -179,8 +179,13 @@ class MainWindow(QtWidgets.QMainWindow):
         print(f"Generate {row_name}")
         model_file = getattr(self.ui, row_name + "LocationText").text()
         episode_root = getattr(self.ui, row_name + "RootText").text()
-        generate_dirs(episode_root, model_file)
+        status, details = generate_dirs(episode_root, model_file)
         # TODO: increment cnt
+        if status == 0:
+            model_name = self.row_to_model_name_map[row_name]
+            self.showInfoPopup(f"Generated {model_name}!", details)
+        else:
+            self.showErrorPopup("An error has occurred", details)
 
     def sModelTextChange(self, row_name, text):
         print(f"{row_name}, new text: {text}")
@@ -189,6 +194,31 @@ class MainWindow(QtWidgets.QMainWindow):
     def sClearAllModels(self):
         print("Clearing all model rows")
         self.clearModelRows()
+
+    # POP-UP WINDOWS
+    def showInfoPopup(self, main_text, details_text=""):
+        msg = QtWidgets.QMessageBox()
+        msg.setWindowTitle("Pipeline Structure Tool")
+        msg.setText(main_text + "                ")
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msg.setDefaultButton(QtWidgets.QMessageBox.Ok)
+        if details_text != "":
+            msg.setDetailedText(details_text)
+
+        msg.exec_()
+
+    def showErrorPopup(self, main_text, details_text=""):
+        msg = QtWidgets.QMessageBox()
+        msg.setWindowTitle("Pipeline Structure Tool")
+        msg.setText(main_text + "                ")
+        msg.setIcon(QtWidgets.QMessageBox.Critical)
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msg.setDefaultButton(QtWidgets.QMessageBox.Ok)
+        if details_text != "":
+            msg.setDetailedText(details_text)
+
+        msg.exec_()
 
     # HELPER FUNCTIONS
     def clearModelRows(self):

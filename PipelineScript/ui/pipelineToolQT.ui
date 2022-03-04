@@ -7,11 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>778</width>
-    <height>416</height>
+    <height>680</height>
    </rect>
   </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Pipeline Structure Tool</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="modelsGroupBox">
@@ -37,7 +40,7 @@
      </property>
      <layout class="QVBoxLayout" name="modelsWindowVerticleLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="headerHorizontalLayout">
         <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
@@ -119,11 +122,28 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="newRowButton">
-        <property name="text">
-         <string>New Directory Model</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="footerHorizontalLayout" stretch="4,1">
+        <item>
+         <widget class="QPushButton" name="newRowButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>New Directory Model</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="clearModels">
+          <property name="text">
+           <string>Clear rows</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -180,19 +200,6 @@
       </item>
      </layout>
     </widget>
-   </widget>
-   <widget class="QPushButton" name="clearModels">
-    <property name="geometry">
-     <rect>
-      <x>580</x>
-      <y>30</y>
-      <width>75</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Clear rows</string>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
