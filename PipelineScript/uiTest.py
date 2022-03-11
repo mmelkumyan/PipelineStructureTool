@@ -5,7 +5,7 @@ import json
 from PyQt5 import QtWidgets, QtCore
 
 from PipelineScript.ui.ui_mainWindow import Ui_MainWindow
-from folderStructureGenerator import generate_dirs
+from folderStructureGenerator import generate_dirs, generate_root
 import projects
 
 # Regenerate source ui class: ` pyuic5 -x .\PipelineScript\ui\pipelineToolQT.ui -o .\PipelineScript\ui\ui_mainWindow.py`
@@ -24,26 +24,31 @@ class MainWindow(QtWidgets.QMainWindow):
     def sLoadProject(self):
         print("Load project")
         self.clearModelRows()
-        # self.browseFile(".\Projects", )
         project_path = self.browseFile("./Projects", "Browse Projects", "Project", "json")
-        print(project_path)
-
-        with open(project_path) as project_file:
-            project = json.load(project_file)
-            models = project["models"]
-            for r, (model_name, fields) in enumerate(models.items()):
-                row_name = self.createNewModelRow(r)
-                getattr(self.ui, row_name + "ModelLabel").setText(model_name)
-                self.row_to_model_name_map[row_name] = model_name
-
-                getattr(self.ui, row_name + "LocationText").setText(fields["modelFile"])
-                getattr(self.ui, row_name + "RootText").setText(fields["rootDir"])
-                self.row_cnt += 1
+        if project_path:
+            with open(project_path) as project_file:
+                project = json.load(project_file)
+                name = project["name"]
+                self.ui.projectNameText.setText(name)
+                models = project["models"]
+                for r, (model_name, fields) in enumerate(models.items()):
+                    row_name = self.createNewModelRow(r)
+                    getattr(self.ui, row_name + "ModelLabel").setText(model_name)
+                    self.row_to_model_name_map[row_name] = model_name
+                    getattr(self.ui, row_name + "NumberText").setText(fields["numTemplate"])
+                    getattr(self.ui, row_name + "LocationText").setText(fields["modelFile"])
+                    getattr(self.ui, row_name + "RootText").setText(fields["rootDir"])
+                    self.row_cnt += 1
 
     def sSaveProject(self):
+        if self.row_cnt == 0:
+            self.showErrorPopup("Failed to save: No directory models")
+            return
+
         print("Save project")
         project_name = self.ui.projectNameText.text()
         self.saveProject(project_name)
+        self.showInfoPopup("Project saved!")
 
     def saveProject(self, name):
         project = {
@@ -54,7 +59,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         for row_name, model_name in self.row_to_model_name_map.items():
             project["models"][model_name] = {}
-            project["models"][model_name]["numLabel"] = getattr(self.ui, row_name + "NumberLabel").text()
+            project["models"][model_name]["numTemplate"] = getattr(self.ui, row_name + "NumberText").text()
             project["models"][model_name]["modelFile"] = getattr(self.ui, row_name + "LocationText").text()
             project["models"][model_name]["rootDir"] = getattr(self.ui, row_name + "RootText").text()
 
@@ -90,11 +95,11 @@ class MainWindow(QtWidgets.QMainWindow):
         setattr(self.ui, model_text_name, model_text)
 
         # Create number label
-        number_label_name = row_name + "NumberLabel"
-        number_label = QtWidgets.QLabel(self.ui.verticalLayoutWidget)
-        number_label.setObjectName(number_label_name)
-        new_horizontal_layout.addWidget(number_label)
-        setattr(self.ui, number_label_name, number_label)
+        number_text_name = row_name + "NumberText"
+        number_text = QtWidgets.QLineEdit(self.ui.verticalLayoutWidget)
+        number_text.setObjectName(number_text_name)
+        new_horizontal_layout.addWidget(number_text)
+        setattr(self.ui, number_text_name, number_text)
 
         # Create location text field
         location_text_name = row_name + "LocationText"
@@ -131,8 +136,10 @@ class MainWindow(QtWidgets.QMainWindow):
         new_horizontal_layout.addWidget(generate_button)
         setattr(self.ui, generate_button_name, generate_button)
 
-        # self.horizontalLayout.setStretch(2, 5)
-        # self.horizontalLayout.setStretch(4, 5)
+        new_horizontal_layout.setStretch(0, 7)  # Model name
+        new_horizontal_layout.setStretch(1, 1)  # Number text
+        new_horizontal_layout.setStretch(2, 10)  # Model location
+        new_horizontal_layout.setStretch(4, 10)  # Root location
 
         self.ui.modelsVerticleLayout.insertLayout(self.ui.modelsVerticleLayout.count(), new_horizontal_layout)
         setattr(self.ui, horizontal_layout_name, new_horizontal_layout)
@@ -141,7 +148,7 @@ class MainWindow(QtWidgets.QMainWindow):
         _translate = QtCore.QCoreApplication.translate
         model_text.setText(_translate("MainWindow", "<Model Name>"))
         model_text.setPlaceholderText(_translate("MainWindow", "Name of structure"))
-        number_label.setText(_translate("MainWindow", "001"))
+        number_text.setText(_translate("MainWindow", "M###"))
         location_text.setPlaceholderText(_translate("MainWindow", "/modelFile.txt"))
         location_browse_button.setText(_translate("MainWindow", "Browse Model"))
         root_text.setPlaceholderText(_translate("MainWindow", "/rootDirectory"))
@@ -178,9 +185,11 @@ class MainWindow(QtWidgets.QMainWindow):
     def sGenerate(self, row_name):
         print(f"Generate {row_name}")
         model_file = getattr(self.ui, row_name + "LocationText").text()
+        number_text = getattr(self.ui, row_name + "NumberText").text()
         episode_root = getattr(self.ui, row_name + "RootText").text()
+        if number_text != "":
+            episode_root = generate_root(episode_root, number_text)
         status, details = generate_dirs(episode_root, model_file)
-        # TODO: increment cnt
         if status == 0:
             model_name = self.row_to_model_name_map[row_name]
             self.showInfoPopup(f"Generated {model_name}!", details)
@@ -196,7 +205,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.clearModelRows()
 
     # POP-UP WINDOWS
-    def showInfoPopup(self, main_text, details_text=""):
+    @staticmethod
+    def showInfoPopup(main_text, details_text=""):
         msg = QtWidgets.QMessageBox()
         msg.setWindowTitle("Pipeline Structure Tool")
         msg.setText(main_text + "                ")
@@ -205,10 +215,10 @@ class MainWindow(QtWidgets.QMainWindow):
         msg.setDefaultButton(QtWidgets.QMessageBox.Ok)
         if details_text != "":
             msg.setDetailedText(details_text)
-
         msg.exec_()
 
-    def showErrorPopup(self, main_text, details_text=""):
+    @staticmethod
+    def showErrorPopup(main_text, details_text=""):
         msg = QtWidgets.QMessageBox()
         msg.setWindowTitle("Pipeline Structure Tool")
         msg.setText(main_text + "                ")
@@ -217,7 +227,6 @@ class MainWindow(QtWidgets.QMainWindow):
         msg.setDefaultButton(QtWidgets.QMessageBox.Ok)
         if details_text != "":
             msg.setDetailedText(details_text)
-
         msg.exec_()
 
     # HELPER FUNCTIONS

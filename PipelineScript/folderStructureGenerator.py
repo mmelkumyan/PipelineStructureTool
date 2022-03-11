@@ -1,5 +1,6 @@
 import argparse
 import os
+import re
 
 # TODO:
 # windows folders -> store as JSON template ->
@@ -25,7 +26,7 @@ def count_tabs(line):
     if cnt % 4 != 0:
         raise Exception("Irregular tab length")
     else:
-        return cnt//4
+        return cnt // 4
 
 
 def move_up_dirs(cnt):
@@ -34,15 +35,15 @@ def move_up_dirs(cnt):
     return
 
 
-def generate_dirs(root_path, template_file):
+def generate_dirs(root_path, template_file, create_root=False):
     try:
         details = "Generated directories:\n"
         cwd = os.getcwd()
+        os.chdir(root_path)
 
         current_level = 0
         prev_level = 0
         with open(template_file, 'r') as template:
-            os.chdir(root_path)
             for line in template:
                 dir_name = line.lstrip().rstrip()  # Strip white space before and after
                 prev_level = current_level
@@ -59,8 +60,7 @@ def generate_dirs(root_path, template_file):
                 # Create directory and enter it
                 os.mkdir(dir_name)
                 dir_path = os.path.join(os.getcwd(), dir_name)
-                # details += f"Created directory: {dir_path}\n"
-                details += current_level*"\\" + f"{dir_name}\n"
+                details += current_level * "\\" + f"{dir_name}\n"
                 os.chdir(dir_path)
 
         os.chdir(cwd)
@@ -69,23 +69,36 @@ def generate_dirs(root_path, template_file):
         return 1, str(exception)
 
 
-def model_to_json(model_file):
-    #... Take in text file and generate json model file.
-    return
+def generate_root(root_of_root, number_template):
+    start_i, end_i = re.search("#+", number_template).regs[0]
+    start_str = number_template[:start_i]
+    num_length = end_i - start_i
 
-def create_project_file(project_name):
-    # project_name = "Story Medicine"
-    # create `Story Medicine.json`
-    # Store in it info for this project, like # of episodes, where episode root is, same for seasons, etc.
-    return
+    model_cnt = get_models_in_dir_count(root_of_root, start_str)
+    num_str = str(model_cnt + 1).zfill(num_length)
+
+    path = os.path.join(root_of_root, start_str + num_str)
+    os.mkdir(path)
+    return path
+
+
+def get_models_in_dir_count(root, start_str):
+    i = 0
+    files = os.listdir(root)
+    for f in files:
+        if re.match(f"^({start_str}\B)", f):
+            i += 1
+    return i
 
 
 if __name__ == "__main__":
     description = "Create directory structure based off template file."
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("--root_dir", help=f"Root directory. Default is '{DEFAULT_ROOT_DIR}'", default=DEFAULT_ROOT_DIR)
-    parser.add_argument("--template", help=f"Template file. Default is '{DEFAULT_TEMPLATE_FILE}'", default=DEFAULT_TEMPLATE_FILE)
-    parser.add_argument("--tab_size", help=f"Tab size in spaces. Default is '{DEFAULT_TAB_SIZE}'", default=DEFAULT_TAB_SIZE)
+    parser.add_argument("--template", help=f"Template file. Default is '{DEFAULT_TEMPLATE_FILE}'",
+                        default=DEFAULT_TEMPLATE_FILE)
+    parser.add_argument("--tab_size", help=f"Tab size in spaces. Default is '{DEFAULT_TAB_SIZE}'",
+                        default=DEFAULT_TAB_SIZE)
     args = parser.parse_args()
 
     starting_path = os.getcwd()
