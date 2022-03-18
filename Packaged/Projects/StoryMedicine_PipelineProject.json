@@ -1,0 +1,16 @@
+{
+    "name": "Story Medicine",
+    "models": {
+        "Season": {
+            "numTemplate": "SMS_S##",
+            "modelFile": "C:/Users/mmelk/OneDrive - Drexel University/Term 9 - Winter 2022/ANIM 435/PipelineStructureTool/PipelineScript/Models/sms_seasonModel.txt",
+            "rootDir": "C:/Users/mmelk/OneDrive - Drexel University/Term 9 - Winter 2022/ANIM 435/PipelineStructureTool/Packaged/testRoot/StoryMedicine"
+        },
+        "Episode": {
+            "numTemplate": "E###",
+            "modelFile": "C:/Users/mmelk/OneDrive - Drexel University/Term 9 - Winter 2022/ANIM 435/PipelineStructureTool/PipelineScript/Models/sms_episodeModel.txt",
+            "rootDir": "C:/Users/mmelk/OneDrive - Drexel University/Term 9 - Winter 2022/ANIM 435/PipelineStructureTool/Packaged/testRoot/StoryMedicine/SMS_S01/EDITORIAL"
+        }
+    },
+    "structure": {}
+}

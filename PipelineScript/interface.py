@@ -41,14 +41,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def sSaveProject(self):
         if self.row_cnt == 0:
-            self.showErrorPopup("Failed to save: No directory models")
+            self.showPopup("Failed to save: No directory models", is_error=True)
             return
 
         print("Save project")
         project_name = self.ui.projectNameText.text()
         self.saveProject(project_name)
-        self.showInfoPopup("Project saved!")
+        self.showPopup("Project saved!")
 
+    # Save project info to JSON file
     def saveProject(self, name):
         project = {
             "name": name,
@@ -71,6 +72,7 @@ class MainWindow(QtWidgets.QMainWindow):
         with open(file_path, "w") as out:
             out.write(json_object)
 
+    # Generate new model row
     def sNewRow(self):
         print("new row!")
         self.createNewModelRow(self.row_cnt)
@@ -176,7 +178,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         return row_name
 
-    # SIGNALS
+    # MODEL ROW SIGNALS
     def sModelBrowse(self, row_name):
         print(f"Browse model {row_name}")
         model_name = self.row_to_model_name_map[row_name]
@@ -191,6 +193,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if dir_name:
             getattr(self.ui, row_name + "RootText").setText(dir_name)
 
+    # Generate directory model
     def sGenerate(self, row_name):
         print(f"Generate {row_name}")
         model_file = getattr(self.ui, row_name + "LocationText").text()
@@ -201,6 +204,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         full_details = ""
 
+        # Catch any exceptions
         try:
             for i in range(0, gen_count):
                 if number_text != "":
@@ -211,12 +215,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 full_details += details
 
         except Exception as exception:
-            self.showErrorPopup("An error has occurred", str(exception))
+            self.showPopup("An error has occurred", str(exception), is_error=True)
             return
 
         model_name = self.row_to_model_name_map[row_name]
-        self.showInfoPopup(f"Generated {model_name}!", full_details)
-
+        self.showPopup(f"Generated {model_name}!", full_details)
 
     def sModelTextChange(self, row_name, text):
         print(f"{row_name}, new text: {text}")
@@ -228,23 +231,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # POP-UP WINDOWS
     @staticmethod
-    def showInfoPopup(main_text, details_text=""):
+    def showPopup(main_text, details_text="", is_error=False):
         msg = QtWidgets.QMessageBox()
         msg.setWindowTitle("Pipeline Structure Tool")
         msg.setText(main_text + "                ")
-        msg.setIcon(QtWidgets.QMessageBox.Information)
-        msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
-        msg.setDefaultButton(QtWidgets.QMessageBox.Ok)
-        if details_text != "":
-            msg.setDetailedText(details_text)
-        msg.exec_()
-
-    @staticmethod
-    def showErrorPopup(main_text, details_text=""):
-        msg = QtWidgets.QMessageBox()
-        msg.setWindowTitle("Pipeline Structure Tool")
-        msg.setText(main_text + "                ")
-        msg.setIcon(QtWidgets.QMessageBox.Critical)
+        if is_error:
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+        else:
+            msg.setIcon(QtWidgets.QMessageBox.Information)
         msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msg.setDefaultButton(QtWidgets.QMessageBox.Ok)
         if details_text != "":
@@ -268,6 +262,7 @@ class MainWindow(QtWidgets.QMainWindow):
         file_name = QtWidgets.QFileDialog.getExistingDirectory(self, f"Browse {dir_type}", root, options=options)
         return file_name
 
+    # Clear all rows
     # Initially sourced from: https://stackoverflow.com/questions/37564728/pyqt-how-to-remove-a-layout-from-a-layout
     def deleteItemsOfLayout(self, layout):
         while layout.count() > 0:
