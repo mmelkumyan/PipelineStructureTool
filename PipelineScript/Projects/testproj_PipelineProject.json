@@ -1,0 +1,11 @@
+{
+    "name": "test proj",
+    "models": {
+        "Test": {
+            "numTemplate": "M###",
+            "modelFile": "C:/Users/mmelk/OneDrive - Drexel University/Term 9 - Winter 2022/ANIM 435/PipelineStructureTool/PipelineScript/Models/exampleModel.txt",
+            "rootDir": "C:/Users/mmelk/OneDrive - Drexel University/Term 9 - Winter 2022/ANIM 435/PipelineStructureTool/PipelineScript/root"
+        }
+    },
+    "structure": {}
+}

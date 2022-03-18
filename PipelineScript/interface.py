@@ -6,7 +6,6 @@ from PyQt5 import QtWidgets, QtCore
 
 from PipelineScript.ui.ui_mainWindow import Ui_MainWindow
 from folderStructureGenerator import generate_dirs, generate_root
-import projects
 
 # Regenerate source ui class: ` pyuic5 -x .\PipelineScript\ui\pipelineToolQT.ui -o .\PipelineScript\ui\ui_mainWindow.py`
 
@@ -136,10 +135,18 @@ class MainWindow(QtWidgets.QMainWindow):
         new_horizontal_layout.addWidget(generate_button)
         setattr(self.ui, generate_button_name, generate_button)
 
+        # Create generate count text
+        generate_count_name = row_name + "GenerateCount"
+        generate_count = QtWidgets.QSpinBox(self.ui.verticalLayoutWidget)
+        generate_count.setObjectName(generate_count_name)
+        new_horizontal_layout.addWidget(generate_count)
+        setattr(self.ui, generate_count_name, generate_count)
+
         new_horizontal_layout.setStretch(0, 7)  # Model name
         new_horizontal_layout.setStretch(1, 1)  # Number text
         new_horizontal_layout.setStretch(2, 10)  # Model location
         new_horizontal_layout.setStretch(4, 10)  # Root location
+        new_horizontal_layout.setStretch(7, 1)  # Generate count
 
         self.ui.modelsVerticleLayout.insertLayout(self.ui.modelsVerticleLayout.count(), new_horizontal_layout)
         setattr(self.ui, horizontal_layout_name, new_horizontal_layout)
@@ -153,7 +160,9 @@ class MainWindow(QtWidgets.QMainWindow):
         location_browse_button.setText(_translate("MainWindow", "Browse Model"))
         root_text.setPlaceholderText(_translate("MainWindow", "/rootDirectory"))
         root_browse_button.setText(_translate("MainWindow", "Browse Root"))
-        generate_button.setText(_translate("MainWindow", "Generate"))
+        generate_button.setText(_translate("MainWindow", "Generate:"))
+        generate_count.setValue(1)
+        generate_count.setMinimum(1)
 
         # CONNECT SLOTS
         location_browse_button.clicked.connect(lambda: self.sModelBrowse(row_name))
@@ -187,14 +196,27 @@ class MainWindow(QtWidgets.QMainWindow):
         model_file = getattr(self.ui, row_name + "LocationText").text()
         number_text = getattr(self.ui, row_name + "NumberText").text()
         episode_root = getattr(self.ui, row_name + "RootText").text()
-        if number_text != "":
-            episode_root = generate_root(episode_root, number_text)
-        status, details = generate_dirs(episode_root, model_file)
-        if status == 0:
-            model_name = self.row_to_model_name_map[row_name]
-            self.showInfoPopup(f"Generated {model_name}!", details)
-        else:
-            self.showErrorPopup("An error has occurred", details)
+
+        gen_count = getattr(self.ui, row_name + "GenerateCount").value()
+
+        full_details = ""
+
+        try:
+            for i in range(0, gen_count):
+                if number_text != "":
+                    root = generate_root(episode_root, number_text)
+                    details = generate_dirs(root, model_file)
+                else:
+                    details = generate_dirs(episode_root, model_file)
+                full_details += details
+
+        except Exception as exception:
+            self.showErrorPopup("An error has occurred", str(exception))
+            return
+
+        model_name = self.row_to_model_name_map[row_name]
+        self.showInfoPopup(f"Generated {model_name}!", full_details)
+
 
     def sModelTextChange(self, row_name, text):
         print(f"{row_name}, new text: {text}")

@@ -1,5 +1,0 @@
-levelA
-    levelB1
-        levelC1
-        levelC2
-    levelB2

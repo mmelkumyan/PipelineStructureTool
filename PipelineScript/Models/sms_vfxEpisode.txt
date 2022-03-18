@@ -1,6 +1,0 @@
-E101_RAD_010
-    E101_RAD_010_5010
-        ANIM
-        COMP
-        EXPORT
-        PLATES
