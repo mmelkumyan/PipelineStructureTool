@@ -2,8 +2,6 @@ import argparse
 import os
 import re
 
-# TO CREATE UI FILE: `pyuic5 -x .\pipelineToolQT.src_ui -o ui_mainWindow_BACKUP.py`
-
 DEBUG_ON = False
 
 DEFAULT_ROOT_DIR = "root"
@@ -11,6 +9,7 @@ DEFAULT_TEMPLATE_FILE = "Models/sms_fullExampleModel.txt"
 DEFAULT_TAB_SIZE = 4
 
 
+# Count number of tabs on a line
 def count_tabs(line):
     cnt = 0
     for char in line:
@@ -24,13 +23,15 @@ def count_tabs(line):
         return cnt // 4
 
 
+# Move up x number of directories
 def move_up_dirs(cnt):
     for i in range(0, cnt):
         os.chdir('..')
     return
 
 
-def generate_dirs(root_path, template_file, create_root=False):
+# Generate directories from template file starting at root
+def generate_dirs(root_path, template_file):
     details = "Generated directories:\n"
     cwd = os.getcwd()
     os.chdir(root_path)
@@ -64,6 +65,7 @@ def generate_dirs(root_path, template_file, create_root=False):
     return details
 
 
+# Generates a root directory based off a naming convention string (Ex. E### -> E001)
 def generate_root(root_of_root, number_template):
     start_i, end_i = re.search("#+", number_template).regs[0]
     start_str = number_template[:start_i]
@@ -77,6 +79,7 @@ def generate_root(root_of_root, number_template):
     return path
 
 
+# Counts number of files in root whose start of name matches the string
 def get_models_in_dir_count(root, start_str):
     i = 0
     files = os.listdir(root)
