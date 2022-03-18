@@ -4,7 +4,7 @@ import json
 
 from PyQt5 import QtWidgets, QtCore
 
-from PipelineScript.ui.ui_mainWindow import Ui_MainWindow
+from ui_mainWindow import Ui_MainWindow
 from folderStructureGenerator import generate_dirs, generate_root
 
 # Regenerate source ui class: ` pyuic5 -x .\PipelineScript\ui\pipelineToolQT.ui -o .\PipelineScript\ui\ui_mainWindow.py`
